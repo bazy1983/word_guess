@@ -8,20 +8,11 @@ fs.readFile('./phrases.txt', 'utf8', function (err, data) { //read phrases from 
     if (err) throw err;
     var allPhrases = data.split(",\r\n");
     var randomIndex = Math.floor(Math.random() * (allPhrases.length-1));
-    console.log(randomIndex)
     randomPhrase = allPhrases[randomIndex];
     randomPhrase = randomPhrase.toLowerCase();
   });
 
-  var x = "this is text";
-  for (i=0; i<x.length; i++){
-      
-      if (x[i].indexOf("e") === -1){
-          console.log("bad");
-      }else {
-          console.log("good")
-      }
-  }
+   
 
 
 var myword = new Word("test word hello everyone");
@@ -50,7 +41,7 @@ function startWithOptions(){
         }
     })
 }
-//startWithOptions()//Works upon execution
+startWithOptions()//Works upon execution
 
 
 function playGame() {
@@ -78,11 +69,13 @@ function addPhrase (){
         {
             name: "phrase",
             message: "add new phrase to the game (no special characters, plaese)",
-            // validate: function(input){
-            //     for (i = 0; i<input.length; i++){
-            //         if("this is text".indexOf())
-            //     }
-            // }
+            validate: function(input){
+                if(/^[a-zA-Z0-9\s]*$/.test(input) === false){ // checks for any special character
+                    return false;
+                }else {
+                    return true;
+                }
+            }
         }
     ])
         .then(function (answer) {
@@ -90,6 +83,7 @@ function addPhrase (){
             fs.appendFile('./phrases.txt', newInput, (err) => {
                 if (err) throw err;
                 console.log('Added New phrase, Thank you!');
+                startWithOptions()
               });
         })
 }
