@@ -1,23 +1,33 @@
-var Word = require("./word.js")
+var Word = require("./word.js");
+var inquirer = require("inquirer");
 
-var testWord = "test word hello everyone";
-var myArray;
-
-var myword = new Word(testWord);
+var myword = new Word("test word hello everyone");
 
 myword.charArray()
-
-
-var x = myword.showWord()
-console.log(x)
-var myTestChar = "t";
-console.log("*******************************************");
-myword.checkChar(myTestChar);
-var x = myword.showWord()
+var x = myword.showWord() //this runs for the first time to show dashes
 console.log(x)
 
-var myTestChar = "e";
-console.log("*******************************************");
-myword.checkChar(myTestChar);
-var x = myword.showWord()
-console.log(x)
+inquirer.prompt([
+    {
+        name: "guess",
+        message: "Guess a letter"
+    }
+])
+.then(function(answer){
+    myword.checkChar(answer.guess);
+    var x = myword.showWord()
+    console.log(x)
+})
+
+
+
+
+
+// char = "t"
+// function myGuess (char){
+//     myword.checkChar(char);
+//     var x = myword.showWord()
+//     console.log(x)
+// }
+
+// myGuess(char)
