@@ -2,7 +2,6 @@ var Letter = require('./letter.js'); // letter constructor
 
 
 var myArray;
-
 module.exports = function (x){
     this.currentWord = x; // saves the word, because why not!!
 
@@ -16,8 +15,6 @@ module.exports = function (x){
     }
 
     this.showWord = function(a){ // shows guess word from as saperate characters from letter objects
-        
-        //console.log(myArray)
         var displyWord = "";
         for (var i = 0; i<myArray.length; i++){
             displyWord += myArray[i].show();
@@ -28,7 +25,7 @@ module.exports = function (x){
     this.checkChar = function(x){
         for (var i = 0; i<myArray.length; i++){
             myArray[i].check(x);
-            //console.log(myArray[i])  // testing
+            
         }
     }
 }
