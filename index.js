@@ -3,21 +3,23 @@ var Word = require("./word.js");
 var inquirer = require("inquirer");
 var fs = require("fs");
 
-var WordBeforeLastChange;
+var wordBeforeLastChange;
 var randomPhrase;
 var chances;
-fs.readFile('./phrases.txt', 'utf8', function (err, data) { //read phrases from file and choose one for game
-    if (err) throw err;
-    myData = data;
-    var allPhrases = data.split(",\r\n");
-    var randomIndex = Math.floor(Math.random() * (allPhrases.length - 1));
-    randomPhrase = allPhrases[randomIndex];
-    randomPhrase = randomPhrase.toLowerCase();
-});
+
 
 var myword
 function startWithOptions() {
-    myword = new Word("test word hello everyone");
+
+    fs.readFile('./phrases.txt', 'utf8', function (err, data) { //read phrases from file and choose one for game
+        if (err) throw err;
+        myData = data;
+        var allPhrases = data.split(",\r\n");
+        var randomIndex = Math.floor(Math.random() * (allPhrases.length - 1));
+        randomPhrase = allPhrases[randomIndex];
+        randomPhrase = randomPhrase.toLowerCase();
+    });
+    
     chances = 7;
     inquirer.prompt([
         {
@@ -29,10 +31,11 @@ function startWithOptions() {
     ]).then(function (answer) {
         switch (answer.options) {
             case "Play":
+                myword = new Word(randomPhrase);
                 console.clear();
-                myword.charArray()
-                var x = myword.showWord() //this runs for the first time to show dashes
-                WordBeforeLastChange = x;
+                myword.charArray();
+                var x = myword.showWord(); //this runs for the first time to show dashes
+                wordBeforeLastChange = x;
                 console.log(x)
                 console.log("Attempts: " + chances);
                 playGame()
@@ -55,7 +58,10 @@ function playGame() {
     inquirer.prompt([
         {
             name: "guess",
-            message: "Guess a letter"
+            message: "Guess a letter",
+            validate: function(input){
+                if(input.length != 1) return false; // only accept one character input.
+            }
         }
     ])
         .then(function (answer) {
@@ -65,27 +71,29 @@ function playGame() {
             console.log(x);
             console.log("Attempts: " + chances);
 
-            if (x === WordBeforeLastChange) {
+            if (x === wordBeforeLastChange) {
                 chances--;
                 console.clear();
                 console.log(x);
                 console.log("Attempts: " + chances);
                 if (chances == 0) {
                     console.log("oops!")
-                    process.exit();
+                    startWithOptions();
                 }
-                WordBeforeLastChange = x;
+                wordBeforeLastChange = x;
                 playGame();
-            } else if (x === "test word hello everyone") {
+            } else if (x === randomPhrase) {
                 console.log("horray!")
-                process.exit();
+                startWithOptions();
             } else {
                 playGame();
+                wordBeforeLastChange = x;
             }
         })
 }
 
 function addPhrase() {
+    console.clear();
     inquirer.prompt([
         {
             name: "phrase",
