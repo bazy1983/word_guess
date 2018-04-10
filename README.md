@@ -6,4 +6,4 @@
 - Word constructor takes a word or phrase and relies on letter constructor to display either dashes or letters.
 - I used node modules like fs module to read phrase.txt file and get one phrase to use in the game. also used it to write new phrases to the game and increase it's phrase bank.
 - I used inquirer node module to display options and take user inputs for various parts of the game.
-* 
+* The game resets after either finishing the game successfully or losing the game.
