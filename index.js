@@ -6,7 +6,7 @@ var fs = require("fs");
 var wordBeforeLastChange;
 var randomPhrase;
 var chances;
-
+var inputArray;
 
 var myword
 function startWithOptions() {
@@ -19,8 +19,22 @@ function startWithOptions() {
         randomPhrase = allPhrases[randomIndex];
         randomPhrase = randomPhrase.toLowerCase();
     });
-    
+
     chances = 7;
+    inputArray = [];//reset the array for new set of inputs
+    console.log(`
+
+ █     █░ ▒█████   ██▀███  ▓█████▄      ▄████  █    ██ ▓█████   ██████   ██████ 
+▓█░ █ ░█░▒██▒  ██▒▓██ ▒ ██▒▒██▀ ██▌    ██▒ ▀█▒ ██  ▓██▒▓█   ▀ ▒██    ▒ ▒██    ▒ 
+▒█░ █ ░█ ▒██░  ██▒▓██ ░▄█ ▒░██   █▌   ▒██░▄▄▄░▓██  ▒██░▒███   ░ ▓██▄   ░ ▓██▄   
+░█░ █ ░█ ▒██   ██░▒██▀▀█▄  ░▓█▄   ▌   ░▓█  ██▓▓▓█  ░██░▒▓█  ▄   ▒   ██▒  ▒   ██▒
+░░██▒██▓ ░ ████▓▒░░██▓ ▒██▒░▒████▓    ░▒▓███▀▒▒▒█████▓ ░▒████▒▒██████▒▒▒██████▒▒
+░ ▓░▒ ▒  ░ ▒░▒░▒░ ░ ▒▓ ░▒▓░ ▒▒▓  ▒     ░▒   ▒ ░▒▓▒ ▒ ▒ ░░ ▒░ ░▒ ▒▓▒ ▒ ░▒ ▒▓▒ ▒ ░
+    ▒ ░ ░    ░ ▒ ▒░   ░▒ ░ ▒░ ░ ▒  ▒      ░   ░ ░░▒░ ░ ░  ░ ░  ░░ ░▒  ░ ░░ ░▒  ░ ░
+    ░   ░  ░ ░ ░ ▒    ░░   ░  ░ ░  ░    ░ ░   ░  ░░░ ░ ░    ░   ░  ░  ░  ░  ░  ░  
+    ░        ░ ░     ░        ░             ░    ░        ░  ░      ░        ░  
+                            ░                                                   
+                            `)
     inquirer.prompt([
         {
             type: "list",
@@ -59,9 +73,11 @@ function playGame() {
         {
             name: "guess",
             message: "Guess a letter",
-            validate: function(input){
-                if(input.length != 1) return false; // only accept one character input.
-            }
+            validate: function (input) {
+                if (input.length != 1) {// only accept one character input.
+                    return false; 
+                } else {return true}
+                } 
         }
     ])
         .then(function (answer) {
@@ -71,21 +87,24 @@ function playGame() {
             console.log(x);
             console.log("Attempts: " + chances);
 
-            if (x === wordBeforeLastChange) {
+            if (x === wordBeforeLastChange && inputArray.indexOf(answer.guess) == -1) {
                 chances--;
+                inputArray.push(answer.guess);
                 console.clear();
                 console.log(x);
                 console.log("Attempts: " + chances);
-                if (chances == 0) {
+                if (chances == 0) { //game over
                     console.log("oops!")
                     startWithOptions();
+                } else { //still have more chances
+                    wordBeforeLastChange = x;
+                    playGame();
                 }
-                wordBeforeLastChange = x;
-                playGame();
-            } else if (x === randomPhrase) {
+            } else if (x === randomPhrase) { //win the game
                 console.log("horray!")
                 startWithOptions();
-            } else {
+            } else { //correct guess
+                inputArray.push(answer.guess);
                 playGame();
                 wordBeforeLastChange = x;
             }
